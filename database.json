@@ -1,0 +1,17 @@
+{
+    "test": {
+        "driver": "pg",
+        "host": "localhost",
+        "user": "shopping_user",
+        "database": "shopping_test",
+        "password": "password"
+
+    },
+    "dev": {
+        "driver": "pg",
+        "host": "localhost",
+        "user": "shopping_user",
+        "database": "shopping",
+        "password": "password"
+    }
+}
