@@ -9,8 +9,17 @@
 npm install
 ```
 to install all the dependencies
-
-3. run 
+3. create .env file with the following variables, set the values to your own
+    POSTGRES_HOST=localhost
+    POSTGRES_DB=shopping
+    POSTGRES_TEST_DB=shopping_test
+    POSTGRES_USER=shopping_user
+    POSTGRES_PASSWORD=
+    PASSWORD_SALT=
+    TOKEN_SECRET=
+    SALT_ROUNDS=8
+    ENV=test
+4. run 
 ```bash
 npm run watch
 ``` 
