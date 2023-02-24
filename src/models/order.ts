@@ -45,7 +45,7 @@ export class Order {
   }
 
   // addProduct
-  public async addProduct(cart: cartType): Promise<orderType> {
+  public async addProduct(cart: cartType): Promise<cartType> {
     try {
       const sql =
         `INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *`;
@@ -67,6 +67,21 @@ export class Order {
     }
   }
 
+  //delete orderproduct relation
+  public async deleteOrderProduct(id: string): Promise<cartType> {
+    try {
+      const sql = `DELETE FROM order_products WHERE id=($1) RETURNING *`;
+      const conn = await Client.connect();      
+
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`unable to delete orderProducts: ${err}`);
+    }
+  }
+
   // update order
   public async update(id: unknown, order: orderType): Promise<orderType> {
     try {
@@ -83,6 +98,21 @@ export class Order {
       return result.rows[0];
     } catch (error) {
       throw new Error(`Erro: ${error}`);
+    }
+  }
+
+  // delete product
+  public async delete(id: string): Promise<orderType> {
+    try {
+      const sql = `DELETE FROM orders WHERE id=($1) RETURNING *`;
+      const conn = await Client.connect();      
+
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`Could not delete order ${id}. Error: ${err}`);
     }
   }
 

@@ -1,6 +1,6 @@
 import { Product } from "../../models/product";
 const prodT = new Product();
-let last_inserted_id: undefined|number;
+let last_product_id: unknown;
 
 describe("Product model testing coverages", ()=>{
 
@@ -21,13 +21,6 @@ describe("Product model testing coverages", ()=>{
     });
 
     describe("Model Method functionality testing", ()=>{
-        it("must return the list of products", async()=>{
-            expect((await prodT.index()).length).toBeGreaterThan(0);
-        });
-
-        it("must return a particular product", async()=>{
-            expect(await prodT.show("7")).toBeTruthy();
-        });
 
         it("must create new product", async()=>{           
             const newproduct = {
@@ -36,20 +29,33 @@ describe("Product model testing coverages", ()=>{
                 category: "food"
             };
             const result = await prodT.create(newproduct);
-            last_inserted_id = result.id;
+            last_product_id = result.id;
             expect(result).toBeTruthy();
         });
 
+        it("must return the list of products", async()=>{
+            expect((await prodT.index()).length).toBeGreaterThan(0);
+        });
+
+        it("must return a particular product", async()=>{
+            expect(await prodT.show(last_product_id as (string))).toBeTruthy();
+        });
+        
         it("must update the existing product", async()=>{           
             const updatedproduct = {
                 name: "20kg paboiled rice",
                 price: 17.8,
                 category: "food"
             };
-            expect(await prodT.update(last_inserted_id ,updatedproduct)).toBeTruthy();
+            expect(await prodT.update(last_product_id as (string), updatedproduct)).toBeTruthy();
         });
         
-        
+        afterAll( async ()=>{
+            // delete product
+            const prodModel = new Product();
+            await prodModel.delete(last_product_id as string);
+        });
+    
     });
     
 });

@@ -5,38 +5,42 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show (args: product id)
-- Create (args: Product)[token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- Index - /api/products [GET]
+- Show (args: product id) - /api/products/:id [GET]
+- Create (args: Product)[token required] - /api/products [POST]
+- [OPTIONAL] Top 5 most popular products - /api/five_most_porpular [GET]
+- [OPTIONAL] Products by category (args: product category) - /api/categories/:category/products [GET]
 
 #### Users
-- Index [token required]
-- Show (args: id)[token required]
-- Create (args: User)[token required]
+- Index [token required] - /api/users [GET]
+- Show (args: id)[token required] - /api/users/:id [GET]
+- Create (args: User)[token required] - /api/users [POST]
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required] - /api/users/:id/active_orders [GET]
+- [OPTIONAL] Completed Orders by user (args: user id)[token required] - /api/users/:id/completed_orders [GET]
 
 ## Data Shapes
 #### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+-  id | integer
+- name | varchar(150)
+- price | decimal(15,2)
+- [OPTIONAL] category | varchar(100)
 
 #### User
-- id
-- firstName
-- lastName
-- password
+- id | integer
+- firstName | varchar(150)
+- lastName | varchar(150)
+- userName | varchar(150)
+- password | varchar(255)
 
 #### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+- id | integer
+- user_id | bigint
+- status of order (active or complete) | varchar(50)
 
+#### OrderProducts
+id | integer
+product_id | bigint
+order_id | bigint
+quantity | decimal(15,2)

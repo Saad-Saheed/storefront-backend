@@ -4,6 +4,7 @@
 - To run the app kindly:
 
 1. clone/download the source code
+
 2. run 
 ```bash
 npm install
@@ -20,14 +21,47 @@ to install all the dependencies
     - TOKEN_SECRET=
     - SALT_ROUNDS=8
     - ENV=test
-    
-4. run 
+     
+4. Database setup: 
+    - The database is using port: 5432
+    - In psql shell run the following:
+
+    1. **Create User**
+        ```bash
+            CREATE USER shopping_user WITH PASSWORD 'password1109';
+        ```
+
+    2. **Create test and live database**
+        ```bash
+            CREATE DATABASE shopping;
+        ```
+        ```bash
+            CREATE DATABASE shopping_test;
+        ```
+
+    3. **Grant priviledges to the user over the two database created**
+        ```bash
+            GRANT ALL PRIVILEGES ON DATABASE shopping TO shopping_user;
+        ```
+        ```bash
+            GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_user;
+        ```
+    4. **Instal db-migrate globally in the terminal**
+        ```bash
+            npm i db-migrate -g
+        ```
+    5. **migrate tables to both test and live databases**
+        ```bash
+            npm run migrate
+        ```
+
+5. run 
 ```bash
 npm run watch
 ``` 
 to compile the typescripts on watch mode and start the server on dist/server.js
 
-5. use <a href="http://localhost:3000/api">http://localhost:3000/api</a> as the base url to for the endpoints
+6. use <a href="http://localhost:3000/api">http://localhost:3000/api</a> as the base url to for the endpoints
 
 
 - Here are the available endpoints, Use the Base url stated above with each endpoint

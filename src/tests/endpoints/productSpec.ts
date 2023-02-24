@@ -1,21 +1,39 @@
 import supertest from "supertest";
+import { Product } from "../../models/product";
+import { User } from "../../models/user";
 import app from "../../server";
 
 const request = supertest(app);
-let last_inserted_id: undefined | number;
+let last_product_id: unknown;
+let last_user_id: unknown;
+let last_token: unknown;
 
 describe("Product route endpoints testing", () => {
+
+    beforeAll( async ()=>{
+        // create user
+        const newUser = {
+            first_name: "Abdullahi",
+            last_name: "Muhammad",
+            username: "muhammad123",
+            password: "password"
+        };
+        const user_response = await request.post('/api/users/').send(newUser);
+        last_user_id = user_response.body.data.user.id;
+        last_token = user_response.body.data.token;
+    });
+
     it("/api/products POST must return status of success", async () => {
-        // craete
+        // craete product 
         const newproduct = {
             name: "Hp p2015 printer",
             category: "Printer",
             price: 2102
         };
         const response = await request.post('/api/products')
-            .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJmaXJzdF9uYW1lIjoic2hhZWVkIiwibGFzdF9uYW1lIjoic2FhZCIsInVzZXJuYW1lIjoiamFtYmFvZGEiLCJwYXNzd29yZCI6IiQyYiQwNSR4YTZDUlRER2lqOUh2bXdLSXp5c1N1V25ySFozZm9tTkZKSjJsNU81czU4SFlxbGVlVU1GVyJ9LCJpYXQiOjE2NzcwODQ5NDB9.j64EshDguhzvhpEDxV5XdX4MXZ9LqRpgBQV1RaFdY2A`)
+            .set('Authorization', `Bearer ${last_token}`)
             .send(newproduct);
-        last_inserted_id = response.body.data.id;
+        last_product_id = response.body.data.id;
 
         expect(response.body.status).toBe("success");
     });
@@ -28,7 +46,7 @@ describe("Product route endpoints testing", () => {
 
     it("/api/products/:id GET must return status of success", async () => {
         // read one
-        const response = await request.get(`/api/products/${last_inserted_id}`);
+        const response = await request.get(`/api/products/${last_product_id}`);
         expect(response.body.status).toBe("success");
     });
 
@@ -41,10 +59,20 @@ describe("Product route endpoints testing", () => {
         };
 
         // update
-        const response = await request.put(`/api/products/${last_inserted_id}`)
-            .set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJmaXJzdF9uYW1lIjoic2hhZWVkIiwibGFzdF9uYW1lIjoic2FhZCIsInVzZXJuYW1lIjoiamFtYmFvZGEiLCJwYXNzd29yZCI6IiQyYiQwNSR4YTZDUlRER2lqOUh2bXdLSXp5c1N1V25ySFozZm9tTkZKSjJsNU81czU4SFlxbGVlVU1GVyJ9LCJpYXQiOjE2NzcwODQ5NDB9.j64EshDguhzvhpEDxV5XdX4MXZ9LqRpgBQV1RaFdY2A`)
+        const response = await request.put(`/api/products/${last_product_id}`)
+            .set('Authorization', `Bearer ${last_token}`)
             .send(updateproduct);
-        last_inserted_id = response.body.data.id;
+        last_product_id = response.body.data.id;
+    });
+
+    afterAll( async ()=>{
+        // delete product
+        const prodModel = new Product();
+        await prodModel.delete(last_product_id as string);
+
+        // delete user
+        const userModel = new User();
+        await userModel.delete(last_user_id as string);
     });
 
 });

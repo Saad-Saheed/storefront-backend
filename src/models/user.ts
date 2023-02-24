@@ -93,4 +93,19 @@ export class User {
     }
   }
 
+    // delete user
+    public async delete(id: string): Promise<UserType> {
+      try {
+        const sql = `DELETE FROM users WHERE id=($1) RETURNING *`;
+        const conn = await Client.connect();      
+  
+        const result = await conn.query(sql, [id]);
+        conn.release();
+        
+        return result.rows[0];
+      } catch (err) {
+        throw new Error(`Could not delete user ${id}. Error: ${err}`);
+      }
+    }
+
 }

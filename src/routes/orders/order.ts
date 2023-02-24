@@ -7,12 +7,12 @@ const orderRoutes = express.Router();
 const orderController = new OrderController();
 
 // create
-orderRoutes.post('/', orderController.create);
+orderRoutes.post('/', authenticate, orderController.create);
 // read one
-orderRoutes.get('/:id', orderController.show);
+orderRoutes.get('/:id', authenticate, orderController.show);
 // update
 orderRoutes.put('/:id', authenticate, orderController.update);
-// addproduct
-orderRoutes.post('/:id/products', orderMustBeOpen, orderController.addProduct);
+// addproductToOrder
+orderRoutes.post('/:id/products', [authenticate, orderMustBeOpen], orderController.addProduct);
 
 export default orderRoutes;
